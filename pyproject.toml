@@ -1,0 +1,25 @@
+[project]
+name = "agent-content-mcp"
+version = "0.1.0"
+description = "An MCP server whose tools come from a django-agent-content site: AI agents edit the site's content safely."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Sushan Poudel" }]
+requires-python = ">=3.10"
+dependencies = ["mcp (>=2.3,<3.0)", "httpx (>=0.28.1,<1.0)"]
+keywords = ["mcp", "django", "ai agents", "claude", "cms"]
+
+[project.scripts]
+agent-content-mcp = "agent_content_mcp.server:main"
+
+[project.urls]
+Repository = "https://github.com/hexa01/agent-content-mcp"
+"Django app" = "https://github.com/hexa01/django-agent-content"
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [{ include = "agent_content_mcp" }]
