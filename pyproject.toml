@@ -1,20 +1,38 @@
 [project]
 name = "agent-content-mcp"
 version = "0.1.0"
-description = "An MCP server whose tools come from a django-agent-content site: AI agents edit the site's content safely."
+description = "MCP server for Django sites: tools generated from django-agent-content, for Claude Code, Claude Desktop, Cursor and other MCP clients."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "Sushan Poudel" }]
 requires-python = ">=3.10"
 dependencies = ["mcp (>=2.3,<3.0)", "httpx (>=0.28.1,<1.0)"]
-keywords = ["mcp", "django", "ai agents", "claude", "cms"]
+keywords = [
+    "mcp", "mcp server", "model context protocol", "django", "claude", "claude code", "ai agents",
+    "llm", "cms", "content management",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 [project.scripts]
 agent-content-mcp = "agent_content_mcp.server:main"
 
 [project.urls]
-Repository = "https://github.com/hexa01/agent-content-mcp"
+Homepage = "https://github.com/hexa01/agent-content-mcp"
+Documentation = "https://github.com/hexa01/agent-content-mcp#readme"
+Issues = "https://github.com/hexa01/agent-content-mcp/issues"
 "Django app" = "https://github.com/hexa01/django-agent-content"
 
 [build-system]

@@ -1,12 +1,11 @@
 # agent-content-mcp
 
-An [MCP](https://modelcontextprotocol.io) server that lets AI agents (Claude Code, Claude Desktop and other MCP
-clients) read and edit a Django site's content through
-[django-agent-content](https://github.com/hexa01/django-agent-content).
+**MCP server for Django sites: AI agents read and edit content through tools generated from the site.**
 
-Its tools are not hard-coded: at startup it reads the site's API description and creates tools for whatever the site
-has registered, such as `list_posts`, `update_post` or `publish_post`. The same server works for any site, with no code
-to edit.
+Works with Claude Code, Claude Desktop, Cursor and other [MCP](https://modelcontextprotocol.io) clients, and any
+Django site running [django-agent-content](https://github.com/hexa01/django-agent-content). Its tools aren't
+hard-coded: at startup it reads the site's API description and creates tools for whatever the site has registered,
+such as `list_posts`, `update_post` or `publish_post`. One server for every site, with no code to edit.
 
 ```
 MCP client ──stdio──> agent-content-mcp ──HTTPS + API key──> site /api/agent/ ──> Django models
