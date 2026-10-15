@@ -1,5 +1,7 @@
 # agent-content-mcp
 
+[![PyPI](https://img.shields.io/pypi/v/agent-content-mcp)](https://pypi.org/project/agent-content-mcp/) [![Python](https://img.shields.io/pypi/pyversions/agent-content-mcp)](https://pypi.org/project/agent-content-mcp/) [![License: MIT](https://img.shields.io/pypi/l/agent-content-mcp)](https://github.com/hexa01/agent-content-mcp/blob/main/LICENSE)
+
 **MCP server for Django sites: AI agents read and edit content through tools generated from the site.**
 
 Works with Claude Code, Claude Desktop, Cursor and other [MCP](https://modelcontextprotocol.io) clients, and any
@@ -25,7 +27,7 @@ Run once, in the project folder where you use Claude Code:
 claude mcp add agent-content \
   -e AGENT_CONTENT_URL=https://example.com/api/agent/ \
   -e AGENT_CONTENT_KEY=ac_your_key \
-  -- uvx --from git+https://github.com/hexa01/agent-content-mcp agent-content-mcp
+  -- uvx agent-content-mcp
 ```
 
 Then start Claude Code there; `claude mcp list` shows whether it connected.
@@ -55,7 +57,7 @@ Claude Desktop's `claude_desktop_config.json`:
   "mcpServers": {
     "agent-content": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/hexa01/agent-content-mcp", "agent-content-mcp"],
+      "args": ["agent-content-mcp"],
       "env": { "AGENT_CONTENT_URL": "https://example.com/api/agent/", "AGENT_CONTENT_KEY": "ac_your_key" }
     }
   }
@@ -80,7 +82,7 @@ documented models give agents better guidance. To see the tools for a site witho
 
 ```bash
 AGENT_CONTENT_URL=https://example.com/api/agent/ AGENT_CONTENT_KEY=ac_... \
-  uvx --from git+https://github.com/hexa01/agent-content-mcp agent-content-mcp --check
+  uvx agent-content-mcp --check
 ```
 
 ### Asking before public changes
