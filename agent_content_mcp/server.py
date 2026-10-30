@@ -61,10 +61,12 @@ def make_server(api: ContentAPI, index: dict | None, problem: str | None) -> Ser
         if spec is None:
             return text(f'Unknown tool {params.name}.', error=True)
         try:
-            method, path, query, body = spec.request(params.arguments or {})
-            return text(tools.result_text(await api.request(method, path, json=body, params=query)))
+            method, path, query, body, files = spec.request(params.arguments or {})
+            return text(tools.result_text(await api.request(method, path, json=body, params=query, files=files)))
         except KeyError as missing:
             return text(f'Missing argument {missing}.', error=True)
+        except tools.UploadError as problem:
+            return text(f'Nothing was uploaded: {problem}', error=True)
         except Exception as error:
             return text(str(error), error=True)
 

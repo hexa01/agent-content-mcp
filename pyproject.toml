@@ -1,7 +1,7 @@
 [project]
 name = "agent-content-mcp"
-version = "0.1.0"
-description = "MCP server for Django sites: tools generated from django-agent-content, for Claude Code, Claude Desktop, Cursor and other MCP clients."
+version = "0.2.0"
+description = "MCP server for Django sites: tools generated from django-agent-content, including file and image uploads, for Claude Code, Claude Desktop, Cursor and other MCP clients."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 dependencies = ["mcp (>=2.3,<3.0)", "httpx (>=0.28.1,<1.0)"]
 keywords = [
     "mcp", "mcp server", "model context protocol", "django", "claude", "claude code", "ai agents",
-    "llm", "cms", "content management",
+    "llm", "cms", "content management", "image upload",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -34,6 +34,7 @@ Homepage = "https://github.com/hexa01/agent-content-mcp"
 Documentation = "https://github.com/hexa01/agent-content-mcp#readme"
 Issues = "https://github.com/hexa01/agent-content-mcp/issues"
 "Django app" = "https://github.com/hexa01/django-agent-content"
+Author = "https://sushanpoudel.com"
 
 [build-system]
 requires = ["poetry-core>=2.0"]

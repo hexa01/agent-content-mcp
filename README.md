@@ -75,7 +75,16 @@ Each resource the site registers becomes a set of tools:
 | `update_<item>` | the resource has writable fields; only the given fields change |
 | `<action>_<item>` | for each registered action, e.g. `publish_post` |
 | `get_<item>_<list>`, `set_<item>_<list>` | for each inline list; `set_` replaces the whole list |
-| `get_<name>`, `update_<name>` | for single-object resources such as site settings |
+| `upload_<item>_<field>` | for each file or image field the site allows uploads to, e.g. `upload_post_cover` |
+| `get_<name>`, `update_<name>`, `upload_<name>_<field>` | for single-object resources such as site settings |
+
+### Uploading files
+
+Upload tools take a `path` to a file on the computer running the server (`~/Pictures/cover.png`). Where an item can't
+exist without its file (an image library entry, say), `create_<item>` takes a `<field>_path` argument instead.
+The server reads the file and sends it to the site, which handles it exactly like an upload in its admin (resizing,
+conversion, validation) and returns the item with the file's URL. Images made by other tools, such as an image
+generator or a download, work the same way once they're saved to disk.
 
 Descriptions come from the site's models (labels, help texts, limits, choices) and resource descriptions, so better
 documented models give agents better guidance. To see the tools for a site without an MCP client:
@@ -98,6 +107,8 @@ To have Claude Code ask for approval before a tool runs, add it to the project's
 - The key is sent only over HTTPS (or to localhost). The site stores only its hash and can expire or revoke it.
 - What the key can do is limited by its Django user's permissions. The API has no delete operations.
 - Every change is recorded in the site's admin history under the key's user.
+- Uploads only send a file whose type the site accepts for that field, within its size limit. Hidden files and
+  anything inside a hidden folder (`~/.ssh`, `.env`, `.git`) are never sent, and paths must be absolute.
 
 ## Development
 
@@ -112,9 +123,15 @@ To use a local checkout from Claude Code: `claude mcp add agent-content -e ... -
 | File | Purpose |
 |---|---|
 | `agent_content_mcp/server.py` | MCP server over stdio; settings; `--check` |
-| `agent_content_mcp/tools.py` | builds tools from the API description and maps calls to requests |
-| `agent_content_mcp/client.py` | HTTP client: authentication, the HTTPS rule, readable errors |
+| `agent_content_mcp/tools.py` | builds tools from the API description, maps calls to requests and reads uploads |
+| `agent_content_mcp/client.py` | HTTP client: authentication, the HTTPS rule, uploads, readable errors |
+
+## Changelog
+
+- **0.2.0**: upload tools for file and image fields (`upload_<item>_<field>`, and `<field>_path` on create), with
+  local type, size and hidden-file checks. Needs django-agent-content 0.2.0 on the site for uploads.
+- **0.1.0**: first release.
 
 ## License
 
-MIT
+MIT. Built by [Sushan Poudel](https://sushanpoudel.com).

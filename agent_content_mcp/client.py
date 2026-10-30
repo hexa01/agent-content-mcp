@@ -1,5 +1,6 @@
-"""HTTP client for a django-agent-content API: authentication, the HTTPS rule and readable errors."""
+"""HTTP client for a django-agent-content API: authentication, the HTTPS rule, uploads and readable errors."""
 
+from json import dumps
 from urllib.parse import urljoin, urlsplit
 
 import httpx
@@ -25,10 +26,17 @@ class ContentAPI:
             timeout=timeout, follow_redirects=False,
         )
 
-    async def request(self, method: str, path: str, json: dict | None = None, params: dict | None = None):
+    async def request(self, method: str, path: str, json: dict | None = None, params: dict | None = None,
+                      files: dict | None = None):
+        """files: part name -> (file name, bytes, MIME type); with files the request is multipart and the
+        JSON body travels in a part named "data"."""
         url = urljoin(self.base_url, path.lstrip('/'))
         try:
-            response = await self.client.request(method, url, json=json, params=params)
+            if files:
+                data = {'data': dumps(json)} if json else None
+                response = await self.client.request(method, url, data=data, files=files, params=params)
+            else:
+                response = await self.client.request(method, url, json=json, params=params)
         except httpx.HTTPError as error:
             raise APIError(f'Could not reach the site at {self.base_url}: {error}') from error
         if response.is_success:
@@ -45,7 +53,8 @@ class ContentAPI:
         message = body.get('error') or response.reason_phrase or 'Request failed'
         if fields := body.get('fields'):
             message += ' ' + _flatten(fields)
-        hints = {401: ' Check AGENT_CONTENT_KEY (expired or revoked?).', 403: ' The key\'s user lacks permission for this.'}
+        hints = {401: ' Check AGENT_CONTENT_KEY (expired or revoked?).', 403: ' The key\'s user lacks permission for this.',
+                 413: ' The file is larger than the site accepts.'}
         return f'{response.status_code}: {message}{hints.get(response.status_code, "")}'
 
     async def version(self) -> int | None:
