@@ -115,6 +115,7 @@ To have Claude Code ask for approval before a tool runs, add it to the project's
 ```bash
 git clone https://github.com/hexa01/agent-content-mcp.git && cd agent-content-mcp
 poetry install                  # creates .venv/ here
+.venv/bin/python -m unittest    # tests, no site needed
 .venv/bin/agent-content-mcp --check
 ```
 
@@ -125,12 +126,11 @@ To use a local checkout from Claude Code: `claude mcp add agent-content -e ... -
 | `agent_content_mcp/server.py` | MCP server over stdio; settings; `--check` |
 | `agent_content_mcp/tools.py` | builds tools from the API description, maps calls to requests and reads uploads |
 | `agent_content_mcp/client.py` | HTTP client: authentication, the HTTPS rule, uploads, readable errors |
+| `tests/` | tool building, tool calls and uploads against a fake site |
 
 ## Changelog
 
-- **0.2.0**: upload tools for file and image fields (`upload_<item>_<field>`, and `<field>_path` on create), with
-  local type, size and hidden-file checks. Needs django-agent-content 0.2.0 on the site for uploads.
-- **0.1.0**: first release.
+What's new and fixed in each version: [CHANGELOG.md](https://github.com/hexa01/agent-content-mcp/blob/main/CHANGELOG.md).
 
 ## License
 

@@ -32,6 +32,25 @@ async def load(api: ContentAPI):
     return index, None
 
 
+async def run_tool(api, specs: dict, problem: str | None, name: str, arguments: dict | None) -> tuple[str, bool]:
+    """One tool call: (text for the agent, whether it's an error). Never raises, so the client always gets an answer."""
+    if problem:
+        return (f'The site\'s API could not be loaded when the server started: {problem} '
+                'Check AGENT_CONTENT_URL and AGENT_CONTENT_KEY, then restart the MCP server.'), True
+    spec = specs.get(name)
+    if spec is None:
+        return f'Unknown tool {name}.', True
+    try:
+        method, path, query, body, files = spec.request(arguments or {})
+        return tools.result_text(await api.request(method, path, json=body, params=query, files=files)), False
+    except KeyError as missing:
+        return f'Missing argument {missing}.', True
+    except tools.UploadError as refused:
+        return f'Nothing was uploaded: {refused}', True
+    except Exception as error:
+        return str(error), True
+
+
 def make_server(api: ContentAPI, index: dict | None, problem: str | None) -> Server:
     specs = {spec.name: spec for spec in tools.build(index)} if index else {}
     if problem:
@@ -51,24 +70,8 @@ def make_server(api: ContentAPI, index: dict | None, problem: str | None) -> Ser
         ])
 
     async def call_tool(ctx, params):
-        def text(message, error=False):
-            return types.CallToolResult(content=[types.TextContent(type='text', text=message)], is_error=error)
-
-        if problem:
-            return text(f'The site\'s API could not be loaded when the server started: {problem} '
-                        'Check AGENT_CONTENT_URL and AGENT_CONTENT_KEY, then restart the MCP server.', error=True)
-        spec = specs.get(params.name)
-        if spec is None:
-            return text(f'Unknown tool {params.name}.', error=True)
-        try:
-            method, path, query, body, files = spec.request(params.arguments or {})
-            return text(tools.result_text(await api.request(method, path, json=body, params=query, files=files)))
-        except KeyError as missing:
-            return text(f'Missing argument {missing}.', error=True)
-        except tools.UploadError as problem:
-            return text(f'Nothing was uploaded: {problem}', error=True)
-        except Exception as error:
-            return text(str(error), error=True)
+        message, error = await run_tool(api, specs, problem, params.name, params.arguments)
+        return types.CallToolResult(content=[types.TextContent(type='text', text=message)], is_error=error)
 
     return Server(
         'agent-content', version=__version__,

@@ -1,6 +1,6 @@
 [project]
 name = "agent-content-mcp"
-version = "0.2.0"
+version = "0.2.1"
 description = "MCP server for Django sites: tools generated from django-agent-content, including file and image uploads, for Claude Code, Claude Desktop, Cursor and other MCP clients."
 readme = "README.md"
 license = "MIT"
@@ -32,6 +32,7 @@ agent-content-mcp = "agent_content_mcp.server:main"
 [project.urls]
 Homepage = "https://github.com/hexa01/agent-content-mcp"
 Documentation = "https://github.com/hexa01/agent-content-mcp#readme"
+Changelog = "https://github.com/hexa01/agent-content-mcp/blob/main/CHANGELOG.md"
 Issues = "https://github.com/hexa01/agent-content-mcp/issues"
 "Django app" = "https://github.com/hexa01/django-agent-content"
 Author = "https://sushanpoudel.com"
